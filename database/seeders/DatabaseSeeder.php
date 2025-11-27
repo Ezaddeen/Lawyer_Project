@@ -3,9 +3,8 @@
 namespace Database\Seeders;
 
 use App\Models\User;
-// use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\Hash; // تحتاج هذا لإستخدام Hash::make
+use Illuminate\Support\Facades\Hash;
 
 class DatabaseSeeder extends Seeder
 {
@@ -14,12 +13,15 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // User::factory(10)->create();
-
-        User::factory()->create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
-            'password' => Hash::make('password'), // كلمة المرور هنا
+        // إنشاء المستخدم أولاً
+        $user = User::factory()->create([
+            'name' => 'Admin User', // غيرنا الاسم ليكون أوضح
+            'email' => 'admin@example.com', // غيرنا البريد الإلكتروني
+            'password' => Hash::make('password'),
         ]);
+
+        // منحه دور "super_admin"
+        // هذا السطر هو الإضافة السحرية
+        $user->assignRole('super_admin');
     }
 }
