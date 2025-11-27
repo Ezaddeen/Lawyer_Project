@@ -22,7 +22,8 @@ COPY database/ database/
 COPY composer.json composer.lock ./
 
 # تثبيت الاعتماديات (مع تجاهل متطلبات المنصة كإجراء احترازي)
-RUN composer install --no-dev --no-scripts --optimize-autoloader --ignore-platform-reqs
+RUN composer install --no-scripts --optimize-autoloader --ignore-platform-reqs
+
 
 # ---------------------------------------------------------------------
 # المرحلة الثانية: بناء الصورة النهائية للتشغيل (Final Image)
