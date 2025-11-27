@@ -22,7 +22,8 @@ WORKDIR /app
 
 # Copy composer files and install dependencies
 COPY composer.json composer.lock ./
-RUN composer install --no-dev --no-scripts --optimize-autoloader
+RUN composer install --no-scripts --optimize-autoloader
+
 
 # Copy the rest of the application code
 COPY . .
