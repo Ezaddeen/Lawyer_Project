@@ -1,16 +1,21 @@
 # Use the official PHP 8.2 image with FrankenPHP
 FROM dunglas/frankenphp:1.1-php8.2-bookworm
 
-# Install system dependencies and required PHP extensions
-# This is where we add intl, gd, and zip
+# Install system dependencies and required PHP extensions (intl, gd, zip)
 RUN apt-get update && apt-get install -y \
     libzip-dev \
     libicu-dev \
     libpng-dev \
+    unzip \
     && docker-php-ext-install -j$(nproc) \
     zip \
     intl \
     gd
+
+# --- START: INSTALL COMPOSER ---
+# This is the new, corrected part
+COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
+# --- END: INSTALL COMPOSER ---
 
 # Set the working directory
 WORKDIR /app
