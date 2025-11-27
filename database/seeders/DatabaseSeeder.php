@@ -5,6 +5,7 @@ namespace Database\Seeders;
 use App\Models\User;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Artisan; // <-- السطر الأول الجديد
 
 class DatabaseSeeder extends Seeder
 {
@@ -13,15 +14,18 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // إنشاء المستخدم أولاً
+        // --- الخطوة السحرية ---
+        // تشغيل أمر إنشاء الأدوار والصلاحيات أولاً
+        Artisan::call('shield:install --fresh'); // <-- السطر الثاني الجديد
+
+        // الآن، قم بإنشاء المستخدم
         $user = User::factory()->create([
-            'name' => 'Admin User', // غيرنا الاسم ليكون أوضح
-            'email' => 'admin@example.com', // غيرنا البريد الإلكتروني
+            'name' => 'Admin User',
+            'email' => 'admin@example.com',
             'password' => Hash::make('password'),
         ]);
 
-        // منحه دور "super_admin"
-        // هذا السطر هو الإضافة السحرية
+        // الآن، قم بمنحه دور "super_admin" الذي تم إنشاؤه للتو
         $user->assignRole('super_admin');
     }
 }
