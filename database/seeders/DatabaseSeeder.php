@@ -16,7 +16,8 @@ class DatabaseSeeder extends Seeder
     {
         // --- الخطوة السحرية ---
         // تشغيل أمر إنشاء الأدوار والصلاحيات أولاً
-        Artisan::call('shield:install --fresh'); // <-- السطر الثاني الجديد
+       Artisan::call('shield:install');
+ // <-- السطر الثاني الجديد
 
         // الآن، قم بإنشاء المستخدم
         $user = User::factory()->create([
