@@ -1,0 +1,15 @@
+/* Custom Filament styles */
+html, body {
+    background-image: url('/images/background.webp') !important;
+    background-size: cover !important;
+    background-attachment: fixed !important;
+    background-position: center !important;
+    min-height: 100vh !important;
+}
+
+/* Add some transparency to panels for better visibility with background */
+.filament-main-content .filament-widget, 
+.filament-main-content .filament-card {
+    background-color: rgba(255, 255, 255, 0.9) !important;
+    backdrop-filter: blur(5px) !important;
+}

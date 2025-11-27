@@ -1,0 +1,15 @@
+html, body {
+    background-image: url('/images/background.webp') !important;
+    background-size: contain !important;
+    background-repeat: no-repeat !important;
+    background-position: center !important;
+   /* min-height: 100vh !important;  */
+}
+
+ .filament-main-content .filament-widget, 
+.filament-main-content .filament-card {
+    background-color: rgba(255, 255, 255, 0.5) !important;
+    backdrop-filter: blur(5px) !important;
+}
+
+

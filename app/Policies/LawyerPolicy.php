@@ -1,0 +1,123 @@
+<?php
+
+namespace App\Policies;
+
+use App\Models\User;
+use App\Models\Lawyer;
+use Illuminate\Auth\Access\HandlesAuthorization;
+
+class LawyerPolicy
+{
+    use HandlesAuthorization;
+
+    public function viewAny(User $user): bool
+    {
+        // يستطيع فتح صفحة المحامين فقط إذا عنده صلاحية عرض أو عرض الكل
+        return $user->can('view_any_lawyer') || $user->can('view_lawyer');
+    }
+
+    public function view(User $user, Lawyer $lawyer): bool
+    {
+        if ($user->can('view_any_lawyer')) {
+            return true;
+        }
+
+        // عرض السجل الخاص به فقط
+        return $user->can('view_lawyer') && $lawyer->id === $user->lawyer_id;
+    }
+    /**
+     * Determine whether the user can view any models.
+     */
+    // public function viewAny(User $user): bool
+    // {
+    //     return $user->can('view_any_lawyer');
+    // }
+
+    /**
+     * Determine whether the user can view the model.
+     */
+    // public function view(User $user, Lawyer $lawyer): bool
+    // {
+    //     return $user->can('view_lawyer');
+    // }
+
+    /**
+     * Determine whether the user can create models.
+     */
+    public function create(User $user): bool
+    {
+        return $user->can('create_lawyer');
+    }
+
+    /**
+     * Determine whether the user can update the model.
+     */
+    public function update(User $user, Lawyer $lawyer): bool
+    {
+        return $user->can('update_lawyer');
+    }
+
+    /**
+     * Determine whether the user can delete the model.
+     */
+    public function delete(User $user, Lawyer $lawyer): bool
+    {
+        return $user->can('delete_lawyer');
+    }
+
+    /**
+     * Determine whether the user can bulk delete.
+     */
+    public function deleteAny(User $user): bool
+    {
+        return $user->can('delete_any_lawyer');
+    }
+
+    /**
+     * Determine whether the user can permanently delete.
+     */
+    public function forceDelete(User $user, Lawyer $lawyer): bool
+    {
+        return $user->can('force_delete_lawyer');
+    }
+
+    /**
+     * Determine whether the user can permanently bulk delete.
+     */
+    public function forceDeleteAny(User $user): bool
+    {
+        return $user->can('force_delete_any_lawyer');
+    }
+
+    /**
+     * Determine whether the user can restore.
+     */
+    public function restore(User $user, Lawyer $lawyer): bool
+    {
+        return $user->can('restore_lawyer');
+    }
+
+    /**
+     * Determine whether the user can bulk restore.
+     */
+    public function restoreAny(User $user): bool
+    {
+        return $user->can('restore_any_lawyer');
+    }
+
+    /**
+     * Determine whether the user can replicate.
+     */
+    public function replicate(User $user, Lawyer $lawyer): bool
+    {
+        return $user->can('replicate_lawyer');
+    }
+
+    /**
+     * Determine whether the user can reorder.
+     */
+    public function reorder(User $user): bool
+    {
+        return $user->can('reorder_lawyer');
+    }
+}
