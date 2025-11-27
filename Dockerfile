@@ -32,7 +32,8 @@ RUN if [ ! -f ".env" ]; then cp .env.example .env; fi
 RUN php artisan key:generate
 
 # Set ownership for storage and bootstrap/cache
-RUN chown -R frankenphp:frankenphp storage bootstrap/cache
+RUN chown -R www-data:www-data storage bootstrap/cache
+
 
 # Expose port 80 for the web server
 EXPOSE 80
