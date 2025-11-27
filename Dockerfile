@@ -30,6 +30,9 @@ COPY . .
 # Generate the Laravel application key if it's not set
 RUN if [ ! -f ".env" ]; then cp .env.example .env; fi
 RUN php artisan key:generate
+RUN php artisan migrate --force
+RUN php artisan migrate --force --seed
+
 
 # Set ownership for storage and bootstrap/cache
 RUN chown -R www-data:www-data storage bootstrap/cache
