@@ -1,15 +1,37 @@
-# المرحلة الأولى: تثبيت الاعتماديات
-FROM composer:latest as vendor
+# ---------------------------------------------------------------------
+# المرحلة الأولى: بناء بيئة الاعتماديات (Builder)
+# ---------------------------------------------------------------------
+# نستخدم نفس صورة PHP التي سنستخدمها في النهاية لضمان التوافق
+FROM php:8.2-apache AS builder
+
 WORKDIR /app
+
+# تثبيت الأدوات والملحقات اللازمة لـ Composer
+RUN apt-get update && apt-get install -y \
+    unzip \
+    libzip-dev \
+    libicu-dev \
+    libpng-dev \
+    && docker-php-ext-install -j$(nproc) zip intl gd
+
+# نسخ Composer
+COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
+
+# نسخ ملفات المشروع اللازمة لتثبيت الاعتماديات فقط
 COPY database/ database/
 COPY composer.json composer.lock ./
-RUN composer install --no-dev --no-scripts --optimize-autoloader
 
-# المرحلة الثانية: بناء الصورة النهائية مع Apache
+# تثبيت الاعتماديات (مع تجاهل متطلبات المنصة كإجراء احترازي)
+RUN composer install --no-dev --no-scripts --optimize-autoloader --ignore-platform-reqs
+
+# ---------------------------------------------------------------------
+# المرحلة الثانية: بناء الصورة النهائية للتشغيل (Final Image)
+# ---------------------------------------------------------------------
 FROM php:8.2-apache
+
 WORKDIR /app
 
-# تثبيت الإضافات اللازمة
+# تثبيت الملحقات اللازمة لتشغيل التطبيق
 RUN apt-get update && apt-get install -y \
     libzip-dev \
     libicu-dev \
@@ -17,13 +39,13 @@ RUN apt-get update && apt-get install -y \
     unzip \
     && docker-php-ext-install -j$(nproc) pdo_mysql zip intl gd
 
-# نسخ ملفات التطبيق
+# نسخ كل ملفات المشروع
 COPY . .
 
-# نسخ الاعتماديات من المرحلة الأولى
-COPY --from=vendor /app/vendor/ ./vendor/
+# نسخ مجلد vendor الجاهز من مرحلة البناء
+COPY --from=builder /app/vendor/ ./vendor/
 
-# إعداد Apache
+# إعداد خادم Apache
 COPY <<EOF /etc/apache2/sites-available/000-default.conf
 <VirtualHost *:80>
     ServerAdmin webmaster@localhost
