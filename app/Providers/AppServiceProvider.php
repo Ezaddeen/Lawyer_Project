@@ -8,14 +8,13 @@ use Illuminate\Support\Facades\Route;
 use App\Observers\ActivityObserver;
 use App\Models\Document;
 use App\Models\User;
-use Illuminate\Support\Facades\URL; // <--- السطر الأول الذي أضفناه
 
 class AppServiceProvider extends ServiceProvider
 {
     /**
      * Register any application services.
      */
-    public function register( ): void
+    public function register(): void
     {
         //
     }
@@ -31,10 +30,5 @@ class AppServiceProvider extends ServiceProvider
             Document::observe(ActivityObserver::class);
             User::observe(ActivityObserver::class);
 
-            // --- الكود الجديد الذي أضفناه ---
-            if ($this->app->environment('production')) {
-                URL::forceScheme('https' );
-            }
-            // ---------------------------------
     }
 }

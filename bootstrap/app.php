@@ -7,33 +7,24 @@ use Illuminate\Foundation\Configuration\Middleware;
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
         web: __DIR__.'/../routes/web.php',
-        api: __DIR__.'/../routes/api.php',
+        api: __DIR__.'/../routes/api.php',   //                  
         commands: __DIR__.'/../routes/console.php',
         health: '/up',
     )
-    ->withMiddleware(function (Middleware $middleware) {
-        // =================================================================
-        // هذا هو الجزء الجديد والمهم الذي سنضيفه
-        // =================================================================
-        $middleware->statefulApi(); // هذا السطر مهم لتطبيقات SPA مثل Filament
-
-        $middleware->trustProxies(at: '*'); // هذا يحل محل ملف TrustProxies.php
-
-        // هذا هو الجزء الخاص بتعطيل CSRF مؤقتاً
-        $middleware->validateCsrfTokens(except: [
-            'livewire/update', // استثناء Livewire لتشخيص المشكلة
+    ->withMiddleware(function (Middleware $middleware): void {
+        //
+         $middleware->group('api', [
+       Illuminate\Routing\Middleware\SubstituteBindings::class,
+       //\Illuminate\Http\Middleware\AddLinkHeadersForPreloadedAssets::class,
+      // \App\Http\Middleware\ForceJsonResponse::class,
         ]);
-        // =================================================================
-
-        // هذا هو الكود القديم الخاص بك، سنتركه كما هو
-        $middleware->group('api', [
-            \Illuminate\Routing\Middleware\SubstituteBindings::class,
-        ]);
-        $middleware->alias([
-            'jwt.auth' => \Tymon\JWTAuth\Http\Middleware\Authenticate::class,
-            'jwt.refresh' => \Tymon\JWTAuth\Http\Middleware\RefreshToken::class,
-        ]);
+         $middleware->alias([
+        'jwt.auth' => \Tymon\JWTAuth\Http\Middleware\Authenticate::class,
+        'jwt.refresh' => \Tymon\JWTAuth\Http\Middleware\RefreshToken::class,
+    ]);
+    
     })
-    ->withExceptions(function (Exceptions $exceptions) {
+    ->withExceptions(function (Exceptions $exceptions): void {
         //
     })->create();
+
