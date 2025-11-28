@@ -7,60 +7,35 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Spatie\Permission\Traits\HasRoles;
 use Tymon\JWTAuth\Contracts\JWTSubject;
+use Filament\Models\Contracts\FilamentUser;
+use Filament\Panel;
 
-class User extends Authenticatable implements JWTSubject
+class User extends Authenticatable implements JWTSubject, FilamentUser
 {
-    /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasFactory, Notifiable, HasRoles;
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var list<string>
-     */
     protected $fillable = [
-        'name',
-        'email',
-        'password',
-        'last_login',
-        'is_active',
-        'lawyer_id',
-        'client_id',
+        'name','email','password','last_login','is_active','lawyer_id','client_id',
     ];
 
-    /**
-     * The attributes that should be hidden for serialization.
-     *
-     * @var list<string>
-     */
-    protected $hidden = [
-        'password',
-        'remember_token',
-    ];
+    protected $hidden = ['password','remember_token'];
 
-    /**
-     * Get the attributes that should be cast.
-     *
-     * @return array<string, string>
-     */
-    protected function casts(): array
-    {
-        return [
-            'email_verified_at' => 'datetime',
-            'password' => 'hashed',
-        ];
+    protected function casts(): array {
+        return ['email_verified_at'=>'datetime','password'=>'hashed'];
     }
 
-
-       public function getJWTIdentifier()
+    // السماح بدخول لوحة Filament
+    public function canAccessPanel(Panel $panel): bool
     {
-        return $this->getKey();
+        return true; 
     }
 
-    public function getJWTCustomClaims()
-    {
-        return [];
-    }
+    // JWT
+    public function getJWTIdentifier(){ return $this->getKey(); }
+    public function getJWTCustomClaims(){ return []; }
+
+
+
 
     // -----------------------------
     // العلاقات (Relationships)
@@ -120,4 +95,6 @@ class User extends Authenticatable implements JWTSubject
     {
         return $this->hasMany(BotFeedbak::class);
     }
+    
+
 }
