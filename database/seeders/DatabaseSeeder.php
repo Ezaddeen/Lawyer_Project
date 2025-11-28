@@ -3,20 +3,23 @@
 namespace Database\Seeders;
 
 use App\Models\User;
+// use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\Hash;
-// لا نحتاج Artisan هنا بعد الآن
+use Illuminate\Support\Facades\Hash; // تحتاج هذا لإستخدام Hash::make
 
 class DatabaseSeeder extends Seeder
 {
+    /**
+     * Seed the application's database.
+     */
     public function run(): void
     {
-        // سنقوم بإنشاء المستخدم فقط
-        // سيتم منحه الدور يدوياً لاحقاً
+        // User::factory(10)->create();
+
         User::factory()->create([
-            'name' => 'Admin User',
-            'email' => 'admin@example.com',
-            'password' => Hash::make('password'),
+            'name' => 'Test User',
+            'email' => 'test@example.com',
+            'password' => Hash::make('password'), // كلمة المرور هنا
         ]);
     }
 }
